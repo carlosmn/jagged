@@ -1,6 +1,7 @@
 (ns jagged.core
   (:import (org.libgit2.jagged Repository Reference
-                               ObjectId ObjectType GitObject)
+                               ObjectId ObjectType GitObject
+                               Blob Tree Commit)
            (org.libgit2.jagged.core NativeMethods)))
 
 (defn ref->clj
@@ -21,12 +22,12 @@
 
 (defn repository
   "Open a repository at the given path"
-  [^String path]
+  ^Repository [^String path]
   (Repository. path))
 
 (defn repository-init
   "Initialize a new repository at the given path"
-  [^String path ^Boolean bare]
+  ^Repository [^String path ^Boolean bare]
   (Repository/init path bare))
 
 (defn bare?
@@ -51,24 +52,24 @@
 
 (defn object
   "Look up an object from the repository"
-  ([^Repository repo ^ObjectId id]
+  (^GitObject [^Repository repo ^ObjectId id]
      (.lookup repo id))
-  ([^Repository repo ^ObjectId id ^ObjectType type]
+  (^GitObject [^Repository repo ^ObjectId id ^ObjectType type]
      (.lookup repo id type)))
 
 (defn commit
   "Look up a commit"
-  [^Repository repo ^ObjectId id]
+  ^Commit [^Repository repo ^ObjectId id]
   (object repo id ObjectType/COMMIT))
 
 (defn tree
   "Look up a tree"
-  [^Repository repo ^ObjectId id]
+  ^Tree [^Repository repo ^ObjectId id]
   (object repo id ObjectType/TREE))
 
 (defn blob
   "Look up a blob"
-  [^Repository repo ^ObjectId id]
+  ^Blob [^Repository repo ^ObjectId id]
   (object repo id ObjectType/BLOB))
 
 (defn tag
@@ -82,5 +83,5 @@
 
 (defn id
   "Get an object's id"
-  [^GitObject obj]
+  ^ObjectId [^GitObject obj]
   (.getId obj))
