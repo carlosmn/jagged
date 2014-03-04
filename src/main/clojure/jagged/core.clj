@@ -1,9 +1,9 @@
 (ns jagged.core
   (:import (org.libgit2.jagged Repository Reference
-                               ObjectId ObjectType)
+                               ObjectId ObjectType GitObject)
            (org.libgit2.jagged.core NativeMethods)))
 
-(defn- ref->clj
+(defn ref->clj
   "Convert a jagged java reference to a clojure map"
   [^Reference ref]
   {:name   (.getCanonicalName ref)
@@ -79,3 +79,8 @@
 (defn symbolic?
   [{:keys [target]}]
   (instance? String target))
+
+(defn id
+  "Get an object's id"
+  [^GitObject obj]
+  (.getId obj))
